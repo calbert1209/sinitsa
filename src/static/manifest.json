@@ -1,0 +1,11 @@
+{
+	"id": "calbert-sinitsa",
+	"name": "Sinitsa",
+	"minAppVersion": "0.15.0",
+	"description": "Randomly show a sample of items in a base.",
+	"author": "Obsidian",
+	"authorUrl": "https://github.com/calbert1209",
+	"fundingUrl": "https://www.survivalinternational.org/donations/celebration",
+	"isDesktopOnly": false,
+	"version": "1.0.0"
+}
