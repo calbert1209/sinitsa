@@ -10,10 +10,10 @@ import {
 import { getSeed, SeedUpdateFrequency } from "src/dateSeed";
 import { generateIndices } from "src/randomIndices";
 
-export const ExampleViewType = "example-view";
+export const RandomSampleViewType = "random-sample-view";
 
-export class MyBasesView extends BasesView implements HoverParent {
-	readonly type = ExampleViewType;
+export class RandomSampleView extends BasesView implements HoverParent {
+	readonly type = RandomSampleViewType;
 	private containerEl: HTMLElement;
 	hoverPopover: HoverPopover | null;
 

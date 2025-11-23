@@ -1,13 +1,13 @@
 import { Plugin } from "obsidian";
-import { ExampleViewType, MyBasesView } from "./MyBaseView";
+import { RandomSampleView, RandomSampleViewType } from "./RandomSampleView";
 
 export default class MyPlugin extends Plugin {
 	async onload() {
-		this.registerBasesView(ExampleViewType, {
+		this.registerBasesView(RandomSampleViewType, {
 			name: "Random Sample",
 			icon: "lucide-dices",
 			factory: (controller, parentEl) =>
-				new MyBasesView(controller, parentEl),
+				new RandomSampleView(controller, parentEl),
 			options: () => [
 				{
 					type: "property",
