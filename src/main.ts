@@ -10,6 +10,13 @@ export default class MyPlugin extends Plugin {
 				new MyBasesView(controller, parentEl),
 			options: () => [
 				{
+					type: "property",
+					displayName: "Property To Show",
+					key: "shownProperty",
+					default: "file.basename",
+					allowMultiple: false,
+				},
+				{
 					type: "slider",
 					displayName: "Count",
 					key: "count",
@@ -19,11 +26,16 @@ export default class MyPlugin extends Plugin {
 					step: 1,
 				},
 				{
-					type: "property",
-					displayName: "Property To Show",
-					key: "shownProperty",
-					default: "file.basename",
-					allowMultiple: false,
+					type: "dropdown",
+					displayName: "Update Frequency",
+					key: "updateFrequency",
+					default: "hourly",
+					options: {
+						hourly: "Hourly",
+						quarterHourly: "Every 15 min.",
+						ephemeral: "Immediately",
+						constant: "Never",
+					},
 				},
 			],
 		});

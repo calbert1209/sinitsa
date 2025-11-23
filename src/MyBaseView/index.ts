@@ -7,6 +7,7 @@ import {
 	Keymap,
 	QueryController,
 } from "obsidian";
+import { getSeed, SeedUpdateFrequency } from "src/dateSeed";
 import { generateIndices } from "src/randomIndices";
 
 export const ExampleViewType = "example-view";
@@ -29,6 +30,9 @@ export class MyBasesView extends BasesView implements HoverParent {
 		const shownProperty = (
 			this.config.get("shownProperty") ?? "file.basename"
 		).toString() as BasesPropertyId;
+		const updateFreq = this.config.get(
+			"updateFrequency"
+		) as SeedUpdateFrequency;
 
 		for (const group of this.data.groupedData) {
 			const groupEl = this.containerEl.createDiv("bases-list-group");
@@ -37,10 +41,8 @@ export class MyBasesView extends BasesView implements HoverParent {
 			});
 
 			const pickedEntries: typeof group.entries = [];
-			const date = new Date();
-			date.setMinutes(0, 0, 0);
 			const indices = await generateIndices(
-				date.toISOString(),
+				getSeed(updateFreq),
 				count,
 				group.entries.length
 			);
