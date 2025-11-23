@@ -6,13 +6,15 @@
 	"scripts": {
 		"dev": "node ./scripts/esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-		"version": "node scripts/version-bump.mjs"
+		"version": "node scripts/version-bump.mjs",
+		"test": "vitest",
+		"test:coverage": "vitest --coverage"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "MIT",
 	"devDependencies": {
-		"@types/node": "^16.11.6",
+		"@types/node": "^24.10.1",
 		"@typescript-eslint/eslint-plugin": "5.29.0",
 		"@typescript-eslint/parser": "5.29.0",
 		"builtin-modules": "3.3.0",
@@ -20,6 +22,7 @@
 		"esbuild-copy-static-files": "^0.1.0",
 		"obsidian": "latest",
 		"tslib": "2.4.0",
-		"typescript": "4.7.4"
+		"typescript": "4.7.4",
+		"vitest": "^4.0.13"
 	}
 }
