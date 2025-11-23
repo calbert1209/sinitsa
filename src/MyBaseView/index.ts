@@ -26,7 +26,7 @@ export class MyBasesView extends BasesView implements HoverParent {
 		const { app } = this;
 		this.containerEl.empty();
 
-		const count = Number(this.config.get("count") ?? 5);
+		const count = Number(this.config.get("count") ?? 100);
 		const shownProperty = (
 			this.config.get("shownProperty") ?? "file.basename"
 		).toString() as BasesPropertyId;
@@ -43,7 +43,7 @@ export class MyBasesView extends BasesView implements HoverParent {
 			const pickedEntries: typeof group.entries = [];
 			const indices = await generateIndices(
 				getSeed(updateFreq),
-				count,
+				Math.min(count, group.entries.length),
 				group.entries.length
 			);
 			for (const index of indices) {

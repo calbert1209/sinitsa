@@ -21,3 +21,9 @@ If your plugin does not need CSS, delete this file.
 	padding-inline-start: unset;
 	padding: 10px;
 }
+
+.bases-list-group {
+	overflow-y: auto;
+	overflow-x: hidden;
+	max-height: 100vh;
+}

@@ -22,7 +22,7 @@ export default class MyPlugin extends Plugin {
 					key: "count",
 					default: 5,
 					min: 1,
-					max: 10,
+					max: 20,
 					step: 1,
 				},
 				{
