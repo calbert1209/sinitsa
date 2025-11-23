@@ -1,5 +1,5 @@
 // cspell:ignore MINSTD
-import { generateIndices } from "./randomIndices";
+import { generateIndices } from ".";
 
 describe(`${generateIndices.name}`, () => {
 	test("should return an array of numbers", async () => {

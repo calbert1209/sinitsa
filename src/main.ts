@@ -8,6 +8,7 @@ import {
 	Plugin,
 	QueryController,
 } from "obsidian";
+import { generateIndices } from "./randomIndices";
 
 export default class MyPlugin extends Plugin {
 	async onload() {
@@ -50,7 +51,7 @@ export class MyBasesView extends BasesView implements HoverParent {
 		this.containerEl = parentEl.createDiv("bases-example-view-container");
 	}
 
-	public onDataUpdated(): void {
+	public async onDataUpdated(): Promise<void> {
 		const { app } = this;
 		this.containerEl.empty();
 
@@ -66,17 +67,15 @@ export class MyBasesView extends BasesView implements HoverParent {
 			});
 
 			const pickedEntries: typeof group.entries = [];
-			const pickedIndices = new Set<number>();
-			while (
-				pickedEntries.length < Math.min(count, group.entries.length)
-			) {
-				const randomIndex = Math.floor(
-					Math.random() * group.entries.length
-				);
-				if (!pickedIndices.has(randomIndex)) {
-					pickedIndices.add(randomIndex);
-					pickedEntries.push(group.entries[randomIndex]);
-				}
+			const date = new Date();
+			date.setMinutes(0, 0, 0);
+			const indices = await generateIndices(
+				date.toISOString(),
+				count,
+				group.entries.length
+			);
+			for (const index of indices) {
+				pickedEntries.push(group.entries[index]);
 			}
 
 			for (const entry of pickedEntries) {
