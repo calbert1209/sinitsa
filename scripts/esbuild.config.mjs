@@ -45,7 +45,6 @@ const context = await esbuild.context({
 			src: "./src/static",
 			dest: "./dist",
 			errorOnExist: false,
-			recursive: true,
 		}),
 	],
 });

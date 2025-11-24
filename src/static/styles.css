@@ -24,9 +24,9 @@ If your plugin does not need CSS, delete this file.
 }
 
 .bases-list-group {
-	overflow-y: auto;
-	overflow-x: hidden;
-	max-height: 100vh;
+	position: relative;
+	bottom: 0;
+	margin-bottom: 60px;
 }
 
 .bases-list-group-header {
