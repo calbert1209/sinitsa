@@ -1,5 +1,6 @@
 import { Plugin } from "obsidian";
 import { RandomSampleView, RandomSampleViewType } from "./RandomSampleView";
+import { randomSampleViewOptions } from "./ViewOption";
 
 export default class SinitsaPlugin extends Plugin {
 	async onload() {
@@ -8,36 +9,7 @@ export default class SinitsaPlugin extends Plugin {
 			icon: "lucide-dices",
 			factory: (controller, parentEl) =>
 				new RandomSampleView(controller, parentEl),
-			options: () => [
-				{
-					type: "property",
-					displayName: "Property To Show",
-					key: "shownProperty",
-					default: "file.basename",
-					allowMultiple: false,
-				},
-				{
-					type: "slider",
-					displayName: "Count",
-					key: "count",
-					default: 5,
-					min: 1,
-					max: 20,
-					step: 1,
-				},
-				{
-					type: "dropdown",
-					displayName: "Update Frequency",
-					key: "updateFrequency",
-					default: "hourly",
-					options: {
-						hourly: "Hourly",
-						quarterHourly: "Every 15 min.",
-						ephemeral: "Immediately",
-						constant: "Never",
-					},
-				},
-			],
+			options: () => [...randomSampleViewOptions],
 		});
 	}
 }

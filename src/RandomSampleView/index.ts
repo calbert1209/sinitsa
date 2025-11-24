@@ -1,13 +1,13 @@
 import {
-	BasesPropertyId,
 	BasesView,
 	HoverParent,
 	HoverPopover,
 	Keymap,
 	QueryController,
 } from "obsidian";
-import { getSeed, SeedUpdateFrequency } from "src/dateSeed";
+import { getSeed } from "src/dateSeed";
 import { generateIndices } from "src/randomIndices";
+import { getViewOptionValue } from "src/ViewOption";
 
 export const RandomSampleViewType = "random-sample-view";
 
@@ -25,13 +25,9 @@ export class RandomSampleView extends BasesView implements HoverParent {
 		const { app } = this;
 		this.containerEl.empty();
 
-		const count = Number(this.config.get("count") ?? 100);
-		const shownProperty = (
-			this.config.get("shownProperty") ?? "file.basename"
-		).toString() as BasesPropertyId;
-		const updateFreq = this.config.get(
-			"updateFrequency"
-		) as SeedUpdateFrequency;
+		const { shownProperty, count, updateFrequency } = getViewOptionValue(
+			this.config
+		);
 
 		for (const group of this.data.groupedData) {
 			const groupEl = this.containerEl.createDiv("bases-list-group");
@@ -41,7 +37,7 @@ export class RandomSampleView extends BasesView implements HoverParent {
 
 			const pickedEntries: typeof group.entries = [];
 			const indices = await generateIndices(
-				getSeed(updateFreq),
+				getSeed(updateFrequency),
 				Math.min(count, group.entries.length),
 				group.entries.length
 			);
