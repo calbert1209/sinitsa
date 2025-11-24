@@ -23,7 +23,7 @@ export class RandomSampleView extends BasesView implements HoverParent {
 		this.shuffleSeed = Date.now();
 	}
 
-	public async onDataUpdated(): Promise<void> {
+	public onDataUpdated(): void {
 		const { app } = this;
 		this.containerEl.empty();
 
@@ -32,25 +32,20 @@ export class RandomSampleView extends BasesView implements HoverParent {
 		for (const group of this.data.groupedData) {
 			const groupEl = this.containerEl.createDiv("bases-list-group");
 
-			const shuffleButton = groupEl.createEl("button", {
-				cls: "bases-list-group-header-button",
+			Header({
+				parent: groupEl,
+				onShuffle: () => {
+					this.shuffleSeed = Date.now();
+					this.onDataUpdated();
+				},
 			});
-			const buttonIcon = shuffleButton.createSpan();
-			setIcon(buttonIcon, "lucide-dices");
-			shuffleButton.createSpan({
-				text: " Shuffle",
-			});
-			shuffleButton.onclick = async () => {
-				this.shuffleSeed = Date.now();
-				await this.onDataUpdated();
-			};
 
 			const groupListEl = groupEl.createEl("ul", {
 				cls: "bases-list-group-list no-decoration",
 			});
 
 			const pickedEntries: typeof group.entries = [];
-			const indices = await generateIndices(
+			const indices = generateIndices(
 				this.shuffleSeed,
 				Math.min(count, group.entries.length),
 				group.entries.length
@@ -60,35 +55,79 @@ export class RandomSampleView extends BasesView implements HoverParent {
 			}
 
 			for (const entry of pickedEntries) {
-				groupListEl.createEl("li", "bases-list-entry", (el) => {
-					el.addClass("no-decoration");
+				const text = (
+					entry.getValue(shownProperty) ?? "..."
+				).toString();
 
-					const text = (
-						entry.getValue(shownProperty) ?? "..."
-					).toString();
-					const linkEl = el.createEl("div", {
-						text,
-						cls: "custom_view_card",
-					});
-					linkEl.onClickEvent((event) => {
-						if (event.button !== 0 && event.button !== 1) return;
-
-						event.preventDefault();
+				Card({
+					parent: groupListEl,
+					text,
+					onClick: (event) => {
 						const path = entry.file.path;
 						const modEvent = Keymap.isModEvent(event);
 						void app.workspace.openLinkText(path, "", modEvent);
-					});
-					linkEl.addEventListener("mouseover", (event) => {
+					},
+					onMouseOver: (event, targetEl) => {
 						app.workspace.trigger("hover-link", {
 							event,
 							source: "bases",
 							hoverParent: this,
-							targetEl: linkEl,
+							targetEl,
 							linktext: entry.file.path,
 						});
-					});
+					},
 				});
 			}
 		}
 	}
 }
+
+const Card = ({
+	parent,
+	text,
+	onClick,
+	onMouseOver,
+}: {
+	parent: HTMLElement;
+	text: string;
+	// eslint-disable-next-line no-unused-vars
+	onClick: (event: MouseEvent) => void;
+	// eslint-disable-next-line no-unused-vars
+	onMouseOver: (event: MouseEvent, target: HTMLElement) => void;
+}) => {
+	const listItemEl = parent.createEl("li", "bases-list-entry");
+	const linkEl = listItemEl.createEl("div", {
+		text,
+		cls: "custom_view_card",
+	});
+	linkEl.onClickEvent((event) => {
+		if (event.button !== 0 && event.button !== 1) return;
+
+		event.preventDefault();
+		onClick(event);
+	});
+	linkEl.addEventListener("mouseover", (event) => onMouseOver(event, linkEl));
+
+	return linkEl;
+};
+
+const Header = ({
+	parent,
+	onShuffle,
+}: {
+	parent: HTMLDivElement;
+	onShuffle: () => void;
+}) => {
+	const headerEl = parent.createDiv("bases-list-group-header");
+	const shuffleButton = headerEl.createEl("button", {
+		cls: "bases-list-group-header-button",
+	});
+	const buttonIcon = shuffleButton.createSpan();
+	setIcon(buttonIcon, "lucide-dices");
+	shuffleButton.createSpan({
+		text: " Shuffle",
+	});
+	shuffleButton.onclick = onShuffle;
+
+	return headerEl;
+};

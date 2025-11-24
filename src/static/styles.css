@@ -20,10 +20,18 @@ If your plugin does not need CSS, delete this file.
 	list-style: none;
 	padding-inline-start: unset;
 	padding: 10px;
+	margin-block-start: initial;
 }
 
 .bases-list-group {
 	overflow-y: auto;
 	overflow-x: hidden;
 	max-height: 100vh;
+}
+
+.bases-list-group-header {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	padding: 20px;
 }
