@@ -4,6 +4,7 @@ import {
 	HoverPopover,
 	Keymap,
 	QueryController,
+	setIcon,
 } from "obsidian";
 import { getSeed } from "src/dateSeed";
 import { generateIndices } from "src/randomIndices";
@@ -15,10 +16,12 @@ export class RandomSampleView extends BasesView implements HoverParent {
 	readonly type = RandomSampleViewType;
 	private containerEl: HTMLElement;
 	hoverPopover: HoverPopover | null;
+	private shuffleSeed: string;
 
 	constructor(controller: QueryController, parentEl: HTMLElement) {
 		super(controller);
 		this.containerEl = parentEl.createDiv("bases-example-view-container");
+		this.shuffleSeed = getSeed("constant");
 	}
 
 	public async onDataUpdated(): Promise<void> {
@@ -29,13 +32,27 @@ export class RandomSampleView extends BasesView implements HoverParent {
 
 		for (const group of this.data.groupedData) {
 			const groupEl = this.containerEl.createDiv("bases-list-group");
+
+			const shuffleButton = groupEl.createEl("button", {
+				cls: "bases-list-group-header-button",
+			});
+			const buttonIcon = shuffleButton.createSpan();
+			setIcon(buttonIcon, "lucide-dices");
+			shuffleButton.createSpan({
+				text: " Shuffle",
+			});
+			shuffleButton.onclick = async () => {
+				this.shuffleSeed = getSeed("ephemeral");
+				await this.onDataUpdated();
+			};
+
 			const groupListEl = groupEl.createEl("ul", {
 				cls: "bases-list-group-list no-decoration",
 			});
 
 			const pickedEntries: typeof group.entries = [];
 			const indices = await generateIndices(
-				getSeed("constant"),
+				this.shuffleSeed,
 				Math.min(count, group.entries.length),
 				group.entries.length
 			);
