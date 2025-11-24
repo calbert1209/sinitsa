@@ -6,6 +6,7 @@ import {
 	QueryController,
 	setIcon,
 } from "obsidian";
+import { SettingsStore } from "src/main";
 import { generateIndices } from "src/randomIndices";
 import { getViewOptionValue } from "src/ViewOption";
 
@@ -15,12 +16,16 @@ export class RandomSampleView extends BasesView implements HoverParent {
 	readonly type = RandomSampleViewType;
 	private containerEl: HTMLElement;
 	hoverPopover: HoverPopover | null;
-	private shuffleSeed: number;
+	readonly settingsStore: SettingsStore;
 
-	constructor(controller: QueryController, parentEl: HTMLElement) {
+	constructor(
+		controller: QueryController,
+		parentEl: HTMLElement,
+		settingsStore: SettingsStore
+	) {
 		super(controller);
 		this.containerEl = parentEl.createDiv("bases-example-view-container");
-		this.shuffleSeed = Date.now();
+		this.settingsStore = settingsStore;
 	}
 
 	public onDataUpdated(): void {
@@ -35,7 +40,9 @@ export class RandomSampleView extends BasesView implements HoverParent {
 			Header({
 				parent: groupEl,
 				onShuffle: () => {
-					this.shuffleSeed = Date.now();
+					this.settingsStore.settings.seed = Date.now();
+					// Intentionally firing and forgetting.
+					this.settingsStore.saveSettings().catch(console.error);
 					this.onDataUpdated();
 				},
 			});
@@ -46,7 +53,7 @@ export class RandomSampleView extends BasesView implements HoverParent {
 
 			const pickedEntries: typeof group.entries = [];
 			const indices = generateIndices(
-				this.shuffleSeed,
+				this.settingsStore.settings.seed,
 				Math.min(count, group.entries.length),
 				group.entries.length
 			);
