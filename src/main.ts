@@ -1,6 +1,6 @@
 import { Plugin } from "obsidian";
 import { RandomSampleView, RandomSampleViewType } from "./RandomSampleView";
-import { randomSampleViewOptions } from "./ViewOption";
+import { viewOptions } from "./ViewOption";
 
 export default class SinitsaPlugin extends Plugin {
 	async onload() {
@@ -9,7 +9,7 @@ export default class SinitsaPlugin extends Plugin {
 			icon: "lucide-dices",
 			factory: (controller, parentEl) =>
 				new RandomSampleView(controller, parentEl),
-			options: () => [...randomSampleViewOptions],
+			options: () => [...viewOptions],
 		});
 	}
 }

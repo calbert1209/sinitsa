@@ -25,9 +25,7 @@ export class RandomSampleView extends BasesView implements HoverParent {
 		const { app } = this;
 		this.containerEl.empty();
 
-		const { shownProperty, count, updateFrequency } = getViewOptionValue(
-			this.config
-		);
+		const { shownProperty, count } = getViewOptionValue(this.config);
 
 		for (const group of this.data.groupedData) {
 			const groupEl = this.containerEl.createDiv("bases-list-group");
@@ -37,7 +35,7 @@ export class RandomSampleView extends BasesView implements HoverParent {
 
 			const pickedEntries: typeof group.entries = [];
 			const indices = await generateIndices(
-				getSeed(updateFrequency),
+				getSeed("constant"),
 				Math.min(count, group.entries.length),
 				group.entries.length
 			);
