@@ -62,8 +62,9 @@ export const getViewOptionValue = (
 	config: BasesViewConfig
 ): SinitsaViewOptions => {
 	return {
-		shownProperty: config.get(viewOption.shownProperty) as BasesPropertyId,
-		count: config.get(viewOption.count) as number,
+		shownProperty: (config.get(viewOption.shownProperty) ??
+			"file.basename") as BasesPropertyId,
+		count: parseInt((config.get(viewOption.count) as string) ?? "10", 10),
 		updateFrequency: config.get(
 			viewOption.updateFrequency
 		) as SeedUpdateFrequency,
