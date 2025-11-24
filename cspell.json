@@ -1,0 +1,11 @@
+{
+    "ignorePaths": [
+      "cspell.json",
+    ],
+    "ignoreWords": [
+      "Sinitsa",
+      "MINSTD",
+      "Keymap",
+      "linktext"
+    ]
+}

@@ -1,4 +1,3 @@
-// cspell:ignore Keymap, linktext
 import {
 	BasesPropertyId,
 	BasesView,

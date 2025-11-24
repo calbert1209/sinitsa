@@ -1,7 +1,7 @@
 import { Plugin } from "obsidian";
 import { RandomSampleView, RandomSampleViewType } from "./RandomSampleView";
 
-export default class MyPlugin extends Plugin {
+export default class SinitsaPlugin extends Plugin {
 	async onload() {
 		this.registerBasesView(RandomSampleViewType, {
 			name: "Random Sample",

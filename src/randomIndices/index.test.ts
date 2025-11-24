@@ -1,4 +1,3 @@
-// cspell:ignore MINSTD
 import { generateIndices } from ".";
 
 describe(`${generateIndices.name}`, () => {
