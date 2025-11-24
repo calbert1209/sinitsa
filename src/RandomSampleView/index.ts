@@ -6,7 +6,6 @@ import {
 	QueryController,
 	setIcon,
 } from "obsidian";
-import { getSeed } from "src/dateSeed";
 import { generateIndices } from "src/randomIndices";
 import { getViewOptionValue } from "src/ViewOption";
 
@@ -16,12 +15,12 @@ export class RandomSampleView extends BasesView implements HoverParent {
 	readonly type = RandomSampleViewType;
 	private containerEl: HTMLElement;
 	hoverPopover: HoverPopover | null;
-	private shuffleSeed: string;
+	private shuffleSeed: number;
 
 	constructor(controller: QueryController, parentEl: HTMLElement) {
 		super(controller);
 		this.containerEl = parentEl.createDiv("bases-example-view-container");
-		this.shuffleSeed = getSeed("constant");
+		this.shuffleSeed = Date.now();
 	}
 
 	public async onDataUpdated(): Promise<void> {
@@ -42,7 +41,7 @@ export class RandomSampleView extends BasesView implements HoverParent {
 				text: " Shuffle",
 			});
 			shuffleButton.onclick = async () => {
-				this.shuffleSeed = getSeed("ephemeral");
+				this.shuffleSeed = Date.now();
 				await this.onDataUpdated();
 			};
 
