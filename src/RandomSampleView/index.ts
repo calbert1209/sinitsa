@@ -28,7 +28,7 @@ export class RandomSampleView extends BasesView implements HoverParent {
 		this.settingsStore = settingsStore;
 	}
 
-	public onDataUpdated(): void {
+	public async onDataUpdated(): Promise<void> {
 		const { app } = this;
 		this.containerEl.empty();
 
@@ -66,9 +66,16 @@ export class RandomSampleView extends BasesView implements HoverParent {
 					entry.getValue(shownProperty) ?? "..."
 				).toString();
 
+				let score = 0;
+				await app.fileManager.processFrontMatter(
+					entry.file,
+					(fm) => (score = fm.score)
+				);
+
 				Card({
 					parent: groupListEl,
 					text,
+					score,
 					onClick: (event) => {
 						const path = entry.file.path;
 						const modEvent = Keymap.isModEvent(event);
@@ -83,6 +90,19 @@ export class RandomSampleView extends BasesView implements HoverParent {
 							linktext: entry.file.path,
 						});
 					},
+					onScoreChange: async (scoreChange) => {
+						await app.fileManager.processFrontMatter(
+							entry.file,
+							(fm) => {
+								const nextScore = (fm.score ?? 0) + scoreChange;
+								fm.score = Math.min(
+									Math.max(0, nextScore),
+									100
+								);
+								score = fm.score;
+							}
+						);
+					},
 				});
 			}
 		}
@@ -92,20 +112,28 @@ export class RandomSampleView extends BasesView implements HoverParent {
 const Card = ({
 	parent,
 	text,
+	score,
 	onClick,
 	onMouseOver,
+	onScoreChange,
 }: {
 	parent: HTMLElement;
 	text: string;
+	score: number;
 	// eslint-disable-next-line no-unused-vars
 	onClick: (event: MouseEvent) => void;
 	// eslint-disable-next-line no-unused-vars
 	onMouseOver: (event: MouseEvent, target: HTMLElement) => void;
+	// eslint-disable-next-line no-unused-vars
+	onScoreChange: (scoreChange: number) => void;
 }) => {
 	const listItemEl = parent.createEl("li", "bases-list-entry");
-	const linkEl = listItemEl.createEl("div", {
-		text,
+	const listItemCard = listItemEl.createEl("div", {
 		cls: "custom_view_card",
+	});
+	const linkEl = listItemCard.createEl("div", {
+		text,
+		cls: "bases-list-entry-body",
 	});
 	linkEl.onClickEvent((event) => {
 		if (event.button !== 0 && event.button !== 1) return;
@@ -115,7 +143,78 @@ const Card = ({
 	});
 	linkEl.addEventListener("mouseover", (event) => onMouseOver(event, linkEl));
 
-	return linkEl;
+	const listItemCardFooter = listItemCard.createEl("div", {
+		cls: "base-list-entry-footer",
+	});
+
+	ScorePanel({
+		parent: listItemCardFooter,
+		score,
+		onScoreChange,
+	});
+
+	return listItemEl;
+};
+
+const ScorePanel = ({
+	parent,
+	score,
+	onScoreChange,
+}: {
+	parent: HTMLElement;
+	score: number;
+	// eslint-disable-next-line no-unused-vars
+	onScoreChange: (scoreChange: number) => void;
+}) => {
+	[
+		{ icon: "chevrons-left", change: -5 },
+		{ icon: "chevron-left", change: -1 },
+	].forEach(({ icon, change }) => {
+		ScoreAdjustButton({
+			parent,
+			iconName: icon,
+			onScoreChange: () => onScoreChange(change),
+		});
+	});
+
+	parent.createDiv(
+		{
+			cls: "base-list-entry-score",
+		},
+		(el) => el.createSpan({ text: score.toString() })
+	);
+
+	[
+		{ icon: "chevron-right", change: 1 },
+		{ icon: "chevrons-right", change: 5 },
+	].forEach(({ icon, change }) => {
+		ScoreAdjustButton({
+			parent,
+			iconName: icon,
+			onScoreChange: () => onScoreChange(change),
+		});
+	});
+};
+
+const ScoreAdjustButton = ({
+	parent,
+	iconName,
+	onScoreChange,
+}: {
+	parent: HTMLElement;
+	iconName: string;
+	onScoreChange: () => void;
+}) => {
+	const buttonEl = parent.createEl("button", {
+		cls: "base-list-score-adjust-button",
+	});
+	const buttonSpan = buttonEl.createSpan();
+	setIcon(buttonSpan, iconName);
+	buttonEl.onClickEvent((event) => {
+		event.preventDefault();
+		event.stopPropagation();
+		onScoreChange();
+	});
 };
 
 const Header = ({

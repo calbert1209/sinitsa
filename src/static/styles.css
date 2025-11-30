@@ -1,19 +1,36 @@
-/*
-
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
-
-If your plugin does not need CSS, delete this file.
-
-*/
-
 .custom_view_card {
-	font-size: large;
-	padding: 20px;
 	border: 1px solid var(--background-modifier-border);
 	border-radius: 5px;
 	margin-bottom: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.bases-list-entry-body {
 	cursor: pointer;
+	font-size: large;
+	padding: 20px;
+	padding: 20px;
+	width: 100%;
+}
+
+.base-list-entry-footer {
+	display: flex;
+	align-items: center;
+	padding: 10px 20px;
+	gap: 5px;
+}
+
+.base-list-entry-score {
+	font-size: medium;
+	width: 2em;
+	display: flex;
+	justify-content: center;
+}
+
+.base-list-score-adjust-button {
+	width: 32px;
 }
 
 .no-decoration {
