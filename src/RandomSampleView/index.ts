@@ -11,7 +11,7 @@ import { SettingsStore } from "src/main";
 import { getViewOptionValue } from "src/ViewOption";
 import { createElement, render } from "preact";
 import { App } from "src/App";
-import { dataSignal, Item, itemsSignal } from "src/store";
+import { Item, itemsSignal } from "src/store";
 import { generateIndices } from "src/randomIndices";
 
 export const RandomSampleViewType = "random-sample-view";
@@ -81,6 +81,13 @@ export class RandomSampleView extends BasesView implements HoverParent {
 		this.app.workspace.openLinkText(filePath, "", modEvent);
 	};
 
+	private onShuffle = () => {
+		this.settingsStore.settings.seed = Date.now();
+		// Intentionally firing and forgetting.
+		this.settingsStore.saveSettings().catch(console.error);
+		void this.onDataUpdated();
+	};
+
 	public onload(): void {
 		console.log("loading", this.data);
 		const onChangeScore: typeof this.onChangeScore = (...args) =>
@@ -88,15 +95,16 @@ export class RandomSampleView extends BasesView implements HoverParent {
 
 		const onClickItem: typeof this.onClickItem = (...args) =>
 			this.onClickItem(...args);
+
+		const onShuffle = () => this.onShuffle();
 		render(
-			createElement(App, { onChangeScore, onClickItem }),
+			createElement(App, { onChangeScore, onClickItem, onShuffle }),
 			this.containerEl
 		);
 	}
 
 	public async onDataUpdated(): Promise<void> {
 		const { shownProperty, count } = getViewOptionValue(this.config);
-		dataSignal.value = `Updated at ${new Date().toISOString()}`;
 		for (const group of this.data.groupedData) {
 			const pickedEntries: BasesEntry[] = [];
 			const indices = generateIndices(

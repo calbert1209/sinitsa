@@ -4,6 +4,7 @@ import {
 	ChevronRightIcon,
 	ChevronsLeftIcon,
 	ChevronsRightIcon,
+	DiceIcon,
 } from "./Icons";
 import { Item, itemsSignal } from "./store";
 import { JSXInternal } from "preact/src/jsx";
@@ -11,11 +12,18 @@ import { JSXInternal } from "preact/src/jsx";
 type AppProps = {
 	onChangeScore: (i: number, file: TFile, d: number) => Promise<void>;
 	onClickItem: (event: MouseEvent, filePath: string) => void;
+	onShuffle: () => void;
 };
 
-export const App = ({ onChangeScore, onClickItem }: AppProps) => {
+export const App = ({ onChangeScore, onClickItem, onShuffle }: AppProps) => {
 	return (
 		<div>
+			<div className="bases-list-group-header">
+				<button onClick={onShuffle}>
+					<DiceIcon />
+					<span>Shuffle</span>
+				</button>
+			</div>
 			{itemsSignal.value.map((item, index) => (
 				<div key={item.file.path} className="custom_view_card">
 					<div className="bases-list-entry-body">

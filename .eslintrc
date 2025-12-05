@@ -1,8 +1,12 @@
 {
 	"root": true,
 	"parser": "@typescript-eslint/parser",
-	"env": { "node": true },
-	"plugins": ["@typescript-eslint"],
+	"env": {
+		"node": true
+	},
+	"plugins": [
+		"@typescript-eslint"
+	],
 	"extends": [
 		"eslint:recommended",
 		"plugin:@typescript-eslint/eslint-recommended",
@@ -12,19 +16,18 @@
 		"sourceType": "module"
 	},
 	"rules": {
-		"no-unused-vars": "warn",
-    "@typescript-eslint/no-unused-vars": [
-      "error",
-      {
-        "args": "all",
-        "argsIgnorePattern": "^_",
-        "caughtErrors": "all",
-        "caughtErrorsIgnorePattern": "^_",
-        "destructuredArrayIgnorePattern": "^_",
-        "varsIgnorePattern": "^_",
-        "ignoreRestSiblings": true
-      }
-    ],
+		"@typescript-eslint/no-unused-vars": [
+			"error",
+			{
+				"args": "all",
+				"argsIgnorePattern": "^_",
+				"caughtErrors": "all",
+				"caughtErrorsIgnorePattern": "^_",
+				"destructuredArrayIgnorePattern": "^_",
+				"varsIgnorePattern": "^_",
+				"ignoreRestSiblings": true
+			}
+		],
 		"@typescript-eslint/ban-ts-comment": "warn",
 		"no-prototype-builtins": "warn",
 		"@typescript-eslint/no-empty-function": "off"
