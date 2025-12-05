@@ -1,14 +1,16 @@
 import { BasesPropertyId, BasesViewConfig, ViewOption } from "obsidian";
 
-type ViewOptionKey = "shownProperty" | "count";
+type ViewOptionKey = "hint1" | "hint2" | "count";
 
 type SinitsaViewOptions = {
-	shownProperty: BasesPropertyId;
+	hint1: BasesPropertyId;
+	hint2: BasesPropertyId | undefined;
 	count: number;
 };
 
 const viewOption: Record<ViewOptionKey, ViewOptionKey> = {
-	shownProperty: "shownProperty",
+	hint1: "hint1",
+	hint2: "hint2",
 	count: "count",
 };
 
@@ -27,9 +29,14 @@ const viewOption: Record<ViewOptionKey, ViewOptionKey> = {
 export const viewOptions: ViewOption[] = [
 	{
 		type: "property",
-		displayName: "Property To Show",
-		key: viewOption.shownProperty,
+		displayName: "Hint 1",
+		key: viewOption.hint1,
 		default: "file.basename",
+	},
+	{
+		type: "property",
+		displayName: "Hint 2",
+		key: viewOption.hint2,
 	},
 	{
 		type: "slider",
@@ -46,8 +53,9 @@ export const getViewOptionValue = (
 	config: BasesViewConfig
 ): SinitsaViewOptions => {
 	return {
-		shownProperty: (config.get(viewOption.shownProperty) ??
+		hint1: (config.get(viewOption.hint1) ??
 			"file.basename") as BasesPropertyId,
+		hint2: (config.get(viewOption.hint2) as BasesPropertyId) ?? undefined,
 		count: parseInt((config.get(viewOption.count) as string) ?? "10", 10),
 	};
 };

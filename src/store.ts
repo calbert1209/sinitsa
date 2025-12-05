@@ -2,7 +2,8 @@ import { signal } from "@preact/signals";
 import { TFile } from "obsidian";
 
 export type Item = {
-	text: string;
+	hint1: string;
+	hint2: string | undefined;
 	score: number;
 	file: TFile;
 };
