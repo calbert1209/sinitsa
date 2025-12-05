@@ -4,6 +4,7 @@ import {
 	HoverParent,
 	HoverPopover,
 	QueryController,
+	TFile,
 } from "obsidian";
 import { SettingsStore } from "src/main";
 import { getViewOptionValue } from "src/ViewOption";
@@ -30,9 +31,55 @@ export class RandomSampleView extends BasesView implements HoverParent {
 		this.settingsStore = settingsStore;
 	}
 
+	private getScore = async (file: TFile): Promise<number> => {
+		let score = 0;
+		try {
+			await this.app.fileManager.processFrontMatter(file, (fm) => {
+				score = fm.score ?? 0;
+			});
+		} catch (error: unknown) {
+			console.error(error);
+		}
+		return score;
+	};
+
+	private changeScore = async (
+		file: TFile,
+		delta: number
+	): Promise<number> => {
+		let score = 0;
+		try {
+			await this.app.fileManager.processFrontMatter(file, (fm) => {
+				const nextScore = (fm.score ?? 0) + delta;
+				score = Math.min(Math.max(0, nextScore), 100);
+				fm.score = score;
+			});
+		} catch (error: unknown) {
+			console.error(error);
+		}
+		return score;
+	};
+
+	private onChangeScore = async (index: number, file: TFile, d: number) => {
+		const score = await this.changeScore(file, d);
+
+		itemsSignal.value = itemsSignal.value.map((item, i) => {
+			if (i === index) {
+				return {
+					...item,
+					score,
+				};
+			}
+
+			return item;
+		});
+	};
+
 	public onload(): void {
 		console.log("loading", this.data);
-		render(createElement(App, null), this.containerEl);
+		const onChangeScore: typeof this.onChangeScore = (...args) =>
+			this.onChangeScore(...args);
+		render(createElement(App, { onChangeScore }), this.containerEl);
 	}
 
 	public async onDataUpdated(): Promise<void> {
