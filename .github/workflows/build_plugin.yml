@@ -15,6 +15,11 @@ jobs:
     if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
 
     steps:
+
+      - name: Get commit info
+        id: commit
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -33,12 +38,12 @@ jobs:
       - name: Create build archive
         run: |
           cd dist
-          zip -r ../sinitsa-plugin-${{ github.sha }}.zip .
+          zip -r ../sinitsa-plugin-${{ steps.commit.outputs.sha_short }}.zip .
           cd ..
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: sinitsa-plugin-${{ github.sha }}
-          path: sinitsa-plugin-${{ github.sha }}.zip
+          name: sinitsa-plugin-${{ steps.commit.outputs.sha_short }}
+          path: sinitsa-plugin-${{ steps.commit.outputs.sha_short }}.zip
           retention-days: 30
