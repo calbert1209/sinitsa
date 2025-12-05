@@ -16,12 +16,12 @@ jobs:
 
     steps:
 
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Get commit info
         id: commit
         run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-
-      - name: Checkout repository
-        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
