@@ -33,7 +33,7 @@ jobs:
       - name: Create build archive
         run: |
           cd dist
-          zip -r ../plugin-build.zip .
+          zip -r ../sinitsa-plugin-${{ github.sha }}.zip .
           cd ..
 
       - name: Upload build artifact
