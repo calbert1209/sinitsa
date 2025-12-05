@@ -8,12 +8,10 @@ import {
 import { Item, itemsSignal } from "./store";
 import { JSXInternal } from "preact/src/jsx";
 
-/* eslint-disable no-unused-vars */
 type AppProps = {
 	onChangeScore: (i: number, file: TFile, d: number) => Promise<void>;
 	onClickItem: (event: MouseEvent, filePath: string) => void;
 };
-/* eslint-enable no-unused-vars */
 
 export const App = ({ onChangeScore, onClickItem }: AppProps) => {
 	return (
@@ -37,13 +35,11 @@ export const App = ({ onChangeScore, onClickItem }: AppProps) => {
 	);
 };
 
-/* eslint-disable no-unused-vars */
 type ScoreControlProps = {
 	item: Item;
 	index: number;
 	onChangeScore: (i: number, file: TFile, d: number) => Promise<void>;
 };
-/* eslint-enable no-unused-vars */
 
 const ScoreControl = ({
 	item,
