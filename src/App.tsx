@@ -18,11 +18,19 @@ export const App = ({ onChangeScore, onClickItem }: AppProps) => {
 		<div>
 			{itemsSignal.value.map((item, index) => (
 				<div key={item.file.path} className="custom_view_card">
-					<div
-						className="bases-list-entry-body"
-						onClick={(event) => onClickItem(event, item.file.path)}
-					>
-						{item.text}
+					<div className="bases-list-entry-body">
+						<ChevronLeftIcon />
+						<div
+							className="base-list-entry-text"
+							onClick={(event) =>
+								onClickItem(event, item.file.path)
+							}
+						>
+							<div className="base-list-entry-text-inner">
+								{item.text}
+							</div>
+						</div>
+						<ChevronRightIcon />
 					</div>
 					<ScoreControl
 						item={item}
@@ -35,6 +43,7 @@ export const App = ({ onChangeScore, onClickItem }: AppProps) => {
 	);
 };
 
+//
 type ScoreControlProps = {
 	item: Item;
 	index: number;

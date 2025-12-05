@@ -8,14 +8,29 @@
 }
 
 .bases-list-entry-body {
-	cursor: pointer;
-	font-size: large;
-	padding: 20px;
 	padding: 20px;
 	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 20px;
+}
+
+.base-list-entry-text {
+	cursor: pointer;
+	font-size: large;
+	flex-grow: 1;
+	display: flex;
+	justify-content: center;
+}
+
+.base-list-entry-text-inner {
+	cursor: pointer;
+	font-size: large;
 }
 
 .base-list-entry-footer {
+	border-top: 1px solid var(--background-modifier-border);
 	display: flex;
 	align-items: center;
 	padding: 10px 20px;
