@@ -3,6 +3,7 @@ import {
 	BasesView,
 	HoverParent,
 	HoverPopover,
+	Keymap,
 	QueryController,
 	TFile,
 } from "obsidian";
@@ -75,15 +76,25 @@ export class RandomSampleView extends BasesView implements HoverParent {
 		});
 	};
 
+	private onClickItem = (event: MouseEvent, filePath: string) => {
+		const modEvent = Keymap.isModEvent(event);
+		this.app.workspace.openLinkText(filePath, "", modEvent);
+	};
+
 	public onload(): void {
 		console.log("loading", this.data);
 		const onChangeScore: typeof this.onChangeScore = (...args) =>
 			this.onChangeScore(...args);
-		render(createElement(App, { onChangeScore }), this.containerEl);
+
+		const onClickItem: typeof this.onClickItem = (...args) =>
+			this.onClickItem(...args);
+		render(
+			createElement(App, { onChangeScore, onClickItem }),
+			this.containerEl
+		);
 	}
 
 	public async onDataUpdated(): Promise<void> {
-		const { app } = this;
 		const { shownProperty, count } = getViewOptionValue(this.config);
 		dataSignal.value = `Updated at ${new Date().toISOString()}`;
 		for (const group of this.data.groupedData) {
@@ -105,11 +116,7 @@ export class RandomSampleView extends BasesView implements HoverParent {
 					entry.getValue(shownProperty) ?? "..."
 				).toString();
 
-				let score = 0;
-				await app.fileManager.processFrontMatter(
-					entry.file,
-					(fm) => (score = fm.score)
-				);
+				const score = await this.getScore(entry.file);
 
 				items.push({ text, score, file: entry.file });
 			}
