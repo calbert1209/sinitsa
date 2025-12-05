@@ -5,57 +5,78 @@ import {
 	ChevronsLeftIcon,
 	ChevronsRightIcon,
 } from "./Icons";
-import { itemsSignal } from "./store";
+import { Item, itemsSignal } from "./store";
+import { JSXInternal } from "preact/src/jsx";
 
 /* eslint-disable no-unused-vars */
-type Props = {
+type AppProps = {
 	onChangeScore: (i: number, file: TFile, d: number) => Promise<void>;
 	onClickItem: (event: MouseEvent, filePath: string) => void;
 };
 /* eslint-enable no-unused-vars */
 
-export const App = ({ onChangeScore, onClickItem }: Props) => {
+export const App = ({ onChangeScore, onClickItem }: AppProps) => {
 	return (
 		<div>
 			{itemsSignal.value.map((item, index) => (
-				<div className="custom_view_card">
+				<div key={item.file.path} className="custom_view_card">
 					<div
 						className="bases-list-entry-body"
 						onClick={(event) => onClickItem(event, item.file.path)}
 					>
 						{item.text}
 					</div>
-					<div className="base-list-entry-footer">
-						<button
-							className="base-list-score-adjust-button"
-							onClick={() => onChangeScore(index, item.file, -5)}
-						>
-							<ChevronsLeftIcon />
-						</button>
-						<button
-							className="base-list-score-adjust-button"
-							onClick={() => onChangeScore(index, item.file, -1)}
-						>
-							<ChevronLeftIcon />
-						</button>
-						<div className="base-list-entry-score">
-							{item.score}
-						</div>
-						<button
-							className="base-list-score-adjust-button"
-							onClick={() => onChangeScore(index, item.file, 1)}
-						>
-							<ChevronRightIcon />
-						</button>
-						<button
-							className="base-list-score-adjust-button"
-							onClick={() => onChangeScore(index, item.file, 5)}
-						>
-							<ChevronsRightIcon />
-						</button>
-					</div>
+					<ScoreControl
+						item={item}
+						index={index}
+						onChangeScore={onChangeScore}
+					/>
 				</div>
 			))}
+		</div>
+	);
+};
+
+/* eslint-disable no-unused-vars */
+type ScoreControlProps = {
+	item: Item;
+	index: number;
+	onChangeScore: (i: number, file: TFile, d: number) => Promise<void>;
+};
+/* eslint-enable no-unused-vars */
+
+const ScoreControl = ({
+	item,
+	index,
+	onChangeScore,
+}: ScoreControlProps): JSXInternal.Element => {
+	return (
+		<div className="base-list-entry-footer">
+			<button
+				className="base-list-score-adjust-button"
+				onClick={() => onChangeScore(index, item.file, -5)}
+			>
+				<ChevronsLeftIcon />
+			</button>
+			<button
+				className="base-list-score-adjust-button"
+				onClick={() => onChangeScore(index, item.file, -1)}
+			>
+				<ChevronLeftIcon />
+			</button>
+			<div className="base-list-entry-score">{item.score}</div>
+			<button
+				className="base-list-score-adjust-button"
+				onClick={() => onChangeScore(index, item.file, 1)}
+			>
+				<ChevronRightIcon />
+			</button>
+			<button
+				className="base-list-score-adjust-button"
+				onClick={() => onChangeScore(index, item.file, 5)}
+			>
+				<ChevronsRightIcon />
+			</button>
 		</div>
 	);
 };
