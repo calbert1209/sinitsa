@@ -33,6 +33,7 @@
 	border-top: 1px solid var(--background-modifier-border);
 	display: flex;
 	align-items: center;
+	justify-content: center;
 	padding: 10px 20px;
 	gap: 5px;
 }

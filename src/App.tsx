@@ -8,6 +8,7 @@ import {
 } from "./Icons";
 import { Item, itemsSignal } from "./store";
 import { JSXInternal } from "preact/src/jsx";
+import { useCallback, useMemo, useState } from "preact/hooks";
 
 type AppProps = {
 	onChangeScore: (i: number, file: TFile, d: number) => Promise<void>;
@@ -26,20 +27,7 @@ export const App = ({ onChangeScore, onClickItem, onShuffle }: AppProps) => {
 			</div>
 			{itemsSignal.value.map((item, index) => (
 				<div key={item.file.path} className="custom_view_card">
-					<div className="bases-list-entry-body">
-						<ChevronLeftIcon />
-						<div
-							className="base-list-entry-text"
-							onClick={(event) =>
-								onClickItem(event, item.file.path)
-							}
-						>
-							<div className="base-list-entry-text-inner">
-								{item.text}
-							</div>
-						</div>
-						<ChevronRightIcon />
-					</div>
+					<Carousel item={item} onClickItem={onClickItem} />
 					<ScoreControl
 						item={item}
 						index={index}
@@ -51,7 +39,47 @@ export const App = ({ onChangeScore, onClickItem, onShuffle }: AppProps) => {
 	);
 };
 
-//
+type CarouselProps = {
+	item: Item;
+	onClickItem: (event: MouseEvent, filePath: string) => void;
+};
+
+const Carousel = ({
+	item,
+	onClickItem,
+}: CarouselProps): JSXInternal.Element => {
+	const [index, setIndex] = useState(0);
+	const slideCount = item.hint2 ? 2 : 1;
+	const slides = useMemo(
+		() =>
+			[item.hint1, item.hint2].filter(
+				(v): v is string => v !== undefined
+			),
+		[item]
+	);
+
+	const shiftIndex = useCallback((d: number) => {
+		setIndex((index) => (index + slideCount + d) % slideCount);
+	}, []);
+	return (
+		<div className="bases-list-entry-body" onClick={() => shiftIndex(-1)}>
+			<ChevronLeftIcon />
+			<div
+				className="base-list-entry-text"
+				onClick={(event) => onClickItem(event, item.file.path)}
+			>
+				<div
+					className="base-list-entry-text-inner"
+					onClick={() => shiftIndex(1)}
+				>
+					{slides[index]}
+				</div>
+			</div>
+			<ChevronRightIcon />
+		</div>
+	);
+};
+
 type ScoreControlProps = {
 	item: Item;
 	index: number;
