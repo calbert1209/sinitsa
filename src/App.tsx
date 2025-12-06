@@ -18,7 +18,7 @@ type AppProps = {
 
 export const App = ({ onChangeScore, onClickItem, onShuffle }: AppProps) => {
 	return (
-		<div>
+		<div className="bases-list-group">
 			<div className="bases-list-group-header">
 				<button onClick={onShuffle}>
 					<DiceIcon />
@@ -62,20 +62,27 @@ const Carousel = ({
 		setIndex((index) => (index + slideCount + d) % slideCount);
 	}, []);
 	return (
-		<div className="bases-list-entry-body" onClick={() => shiftIndex(-1)}>
-			<ChevronLeftIcon />
+		<div className="bases-list-entry-body">
+			<button
+				className="base-list-entry-body-button"
+				onClick={() => shiftIndex(-1)}
+			>
+				<ChevronLeftIcon />
+			</button>
 			<div
 				className="base-list-entry-text"
 				onClick={(event) => onClickItem(event, item.file.path)}
 			>
-				<div
-					className="base-list-entry-text-inner"
-					onClick={() => shiftIndex(1)}
-				>
+				<div className="base-list-entry-text-inner">
 					{slides[index]}
 				</div>
 			</div>
-			<ChevronRightIcon />
+			<button
+				className="base-list-entry-body-button"
+				onClick={() => shiftIndex(1)}
+			>
+				<ChevronRightIcon />
+			</button>
 		</div>
 	);
 };
