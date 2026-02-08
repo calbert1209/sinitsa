@@ -1,3 +1,7 @@
+:root {
+	--image-max-height: 240px;
+}
+
 .custom_view_card {
 	background-color: var(--background-primary);
 	border: 1px solid var(--background-modifier-border);
@@ -15,7 +19,7 @@
 	justify-content: space-between;
 	align-items: center;
 	gap: 20px;
-	height: 96px;
+	height: var(--image-max-height);
 }
 
 .base-list-entry-body-button {
@@ -38,9 +42,9 @@
 }
 
 .base-list-entry-image {
-	max-width: 192px;
-	max-height: 96px;
-	object-fit: contain;
+	width: calc(var(--image-max-height) * 2);
+	height: var(--image-max-height);
+	object-fit: cover;
 }
 
 .base-list-entry-footer {
