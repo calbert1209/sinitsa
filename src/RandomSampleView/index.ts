@@ -104,7 +104,7 @@ export class RandomSampleView extends BasesView implements HoverParent {
 	}
 
 	public async onDataUpdated(): Promise<void> {
-		const { hint1, hint2, count } = getViewOptionValue(this.config);
+		const { hint1, hint2, hint3, count } = getViewOptionValue(this.config);
 		for (const group of this.data.groupedData) {
 			const pickedEntries: BasesEntry[] = [];
 			const indices = generateIndices(
@@ -120,16 +120,21 @@ export class RandomSampleView extends BasesView implements HoverParent {
 
 			for (let i = 0; i < pickedEntries.length; i++) {
 				const entry = pickedEntries[i];
-				const safeHint1 = (entry.getValue(hint1) ?? "...").toString();
-				const safeHint2 = hint2
-					? entry.getValue(hint2)?.toString()
-					: undefined;
+				const [safeHint1, safeHint2, safeHint3] = [hint1, hint2, hint3].map((hint) => {
+					const hintValue = hint ? entry.getValue(hint)?.toString() : undefined;
+					if (hintValue?.startsWith("images/")) {
+						const image = this.app.vault.getFileByPath(hintValue);
+						return image ? this.app.vault.getResourcePath(image) : hintValue
+					}
+					return hintValue && hintValue !== "null" ? hintValue : undefined;
+				});
 
 				const score = await this.getScore(entry.file);
 
 				items.push({
 					hint1: safeHint1,
 					hint2: safeHint2,
+					hint3: safeHint3,
 					score,
 					file: entry.file,
 				});

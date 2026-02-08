@@ -15,6 +15,7 @@
 	justify-content: space-between;
 	align-items: center;
 	gap: 20px;
+	height: 96px;
 }
 
 .base-list-entry-body-button {
@@ -34,6 +35,12 @@
 .base-list-entry-text-inner {
 	cursor: pointer;
 	font-size: large;
+}
+
+.base-list-entry-image {
+	max-width: 192px;
+	max-height: 96px;
+	object-fit: contain;
 }
 
 .base-list-entry-footer {

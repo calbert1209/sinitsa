@@ -49,18 +49,19 @@ const Carousel = ({
 	onClickItem,
 }: CarouselProps): JSXInternal.Element => {
 	const [index, setIndex] = useState(0);
-	const slideCount = item.hint2 ? 2 : 1;
 	const slides = useMemo(
 		() =>
-			[item.hint1, item.hint2].filter(
+			[item.hint1, item.hint2, item.hint3].filter(
 				(v): v is string => v !== undefined
 			),
 		[item]
 	);
 
 	const shiftIndex = useCallback((d: number) => {
-		setIndex((index) => (index + slideCount + d) % slideCount);
-	}, []);
+		setIndex((index) => (index + slides.length + d) % slides.length);
+	}, [slides]);
+
+	const slide = slides[index];
 	return (
 		<div className="bases-list-entry-body">
 			<button
@@ -73,9 +74,17 @@ const Carousel = ({
 				className="base-list-entry-text"
 				onClick={(event) => onClickItem(event, item.file.path)}
 			>
-				<div className="base-list-entry-text-inner">
-					{slides[index]}
-				</div>
+				{slide?.startsWith("app://") ? (
+					<img
+						src={slide}
+						alt="Item Image"
+						className="base-list-entry-image"
+					/>
+				) : (
+					<div className="base-list-entry-text-inner">
+						{slide}
+					</div>
+				)}
 			</div>
 			<button
 				className="base-list-entry-body-button"
